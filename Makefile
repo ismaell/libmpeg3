@@ -172,14 +172,14 @@ backup: clean
 wc:
 	cat *.c *.h audio/*.c audio/*.h video/*.c video/*.h | wc
 
-$(ASMOBJS): 
-	${CC} -c ${CFLAGS} $(subst $(OBJDIR)/,, $*.S) -o $*.o
+${ASMOBJS}: ${OBJDIR}/%.o: %.S
+	${CC} -c ${CFLAGS} -o $@ $<
 
-$(NASMOBJS): 
-	$(NASM) -f elf $(subst $(OBJDIR)/,, $*.s) -o $*.o
+${NASMOBJS}: ${OBJDIR}/%.o: %.s
+	${NASM} -f elf -o $@ $<
 
-$(A52OBJS):
-	${CC} -c ${A52CFLAGS} $(subst $(OBJDIR)/,, $*.c) -o $*.o
+${A52OBJS}: ${OBJDIR}/%.o: %.c
+	${CC} ${A52CFLAGS} -c -o $@ $<
 
 ${OBJDIR}/%.o: %.c
 	${CC} ${CFLAGS} -c -o $@ $<
