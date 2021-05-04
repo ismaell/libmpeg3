@@ -132,7 +132,6 @@ $(shell mkdir -p $(OBJDIR) $(DIRS))
 
 all: $(OUTPUT) $(UTILS)
 
-
 $(OUTPUT): $(OBJS) $(ASMOBJS) $(NASMOBJS) $(A52OBJS)
 	ar rcs $(OUTPUT) $(OBJS) $(ASMOBJS) $(A52OBJS) $(NASMOBJS)
 
@@ -173,9 +172,6 @@ backup: clean
 wc:
 	cat *.c *.h audio/*.c audio/*.h video/*.c video/*.h | wc
 
-$(OBJS): 
-	${CC} -c ${CFLAGS} $(subst $(OBJDIR)/,, $*.c) -o $*.o
-
 $(ASMOBJS): 
 	${CC} -c ${CFLAGS} $(subst $(OBJDIR)/,, $*.S) -o $*.o
 
@@ -185,49 +181,7 @@ $(NASMOBJS):
 $(A52OBJS):
 	${CC} -c ${A52CFLAGS} $(subst $(OBJDIR)/,, $*.c) -o $*.o
 
-$(OBJDIR)/libmpeg3.o: 				    libmpeg3.c
-$(OBJDIR)/mpeg3atrack.o: 			    mpeg3atrack.c
-$(OBJDIR)/mpeg3bits.o:  			    mpeg3bits.c
-$(OBJDIR)/mpeg3css.o: 				    mpeg3css.c
-$(OBJDIR)/mpeg3demux.o: 			    mpeg3demux.c
-$(OBJDIR)/mpeg3dump.o: 				    mpeg3dump.c
-$(OBJDIR)/mpeg3ifo.o: 				    mpeg3ifo.c
-$(OBJDIR)/mpeg3io.o: 				    mpeg3io.c
-$(OBJDIR)/mpeg3strack.o:                            mpeg3strack.c
-$(OBJDIR)/mpeg3title.o: 			    mpeg3title.c
-$(OBJDIR)/mpeg3toc3.o:  			    mpeg3toc3.c
-$(OBJDIR)/mpeg3toc.o: 				    mpeg3toc.c
-$(OBJDIR)/mpeg3tocutil.o:                           mpeg3tocutil.c
-$(OBJDIR)/mpeg3vtrack.o: 			    mpeg3vtrack.c
-$(OBJDIR)/audio/ac3.o:  			    audio/ac3.c
-$(OBJDIR)/audio/bit_allocation.o: 		    audio/bit_allocation.c
-$(OBJDIR)/audio/dct.o:  			    audio/dct.c
-$(OBJDIR)/audio/exponents.o: 			    audio/exponents.c
-$(OBJDIR)/audio/header.o: 			    audio/header.c
-$(OBJDIR)/audio/huffman.o: 			    audio/huffman.c
-$(OBJDIR)/audio/layer2.o: 			    audio/layer2.c
-$(OBJDIR)/audio/layer3.o: 			    audio/layer3.c
-$(OBJDIR)/audio/mantissa.o: 			    audio/mantissa.c
-$(OBJDIR)/audio/mpeg3audio.o: 			    audio/mpeg3audio.c
-$(OBJDIR)/audio/pcm.o:  			    audio/pcm.c
-$(OBJDIR)/audio/synthesizers.o: 		    audio/synthesizers.c
-$(OBJDIR)/audio/tables.o: 			    audio/tables.c
-$(OBJDIR)/video/getpicture.o: 			    video/getpicture.c
-$(OBJDIR)/video/headers.o: 			    video/headers.c
-$(OBJDIR)/video/idct.o: 			    video/idct.c
-$(OBJDIR)/video/macroblocks.o:  		    video/macroblocks.c
-$(OBJDIR)/video/mmxtest.o: 			    video/mmxtest.c
-$(OBJDIR)/video/motion.o: 			    video/motion.c
-$(OBJDIR)/video/mpeg3cache.o: 			    video/mpeg3cache.c
-$(OBJDIR)/video/mpeg3video.o: 			    video/mpeg3video.c
-$(OBJDIR)/video/output.o: 			    video/output.c
-$(OBJDIR)/video/reconstruct.o:  		    video/reconstruct.c
-$(OBJDIR)/video/seek.o: 			    video/seek.c
-$(OBJDIR)/video/slice.o: 			    video/slice.c
-$(OBJDIR)/video/subtitle.o:                         video/subtitle.c
-$(OBJDIR)/video/vlc.o:  			    video/vlc.c
-$(OBJDIR)/workarounds.o:  			    workarounds.c
-
-
+${OBJDIR}/%.o: %.c
+	${CC} ${CFLAGS} -c -o $@ $<
 
 include depend.a52
