@@ -2,7 +2,9 @@ CC = gcc
 NASM = nasm
 USE_CSS = 1
 
-DST=/usr/bin
+DEST =
+prefix = /usr
+bindir = ${prefix}/bin
 
 ARCH = $(shell uname -m)
 OBJDIR := ${ARCH}
@@ -133,8 +135,10 @@ $(OBJDIR)/mpeg2qt: $(OUTPUT)
 		-lz \
 		-ldl
 
-install: 
-	cp $(UTILS) $(DST)
+.PHONY: install
+install: ${UTILS}
+	install -d ${DEST}${bindir}
+	install -m555 ${UTILS} ${DEST}${bindir}
 
 clean:
 	rm -rf $(OBJDIR)
