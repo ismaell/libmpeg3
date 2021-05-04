@@ -1,6 +1,5 @@
 CC = gcc
 NASM = nasm
-USE_MMX = 0
 USE_CSS = 1
 A52DIR := $(shell expr a52dec* )
 
@@ -10,12 +9,10 @@ ARCH = $(shell uname -m)
 OBJDIR := ${ARCH}
 
 ifeq (${ARCH}, alpha)
-  USE_MMX = 0
   CFLAGS ?= -O4 -arch ev67 -ieee -accept c99_keywords -gcc_messages
 endif
 
 ifeq (${ARCH}, i686)
-  USE_MMX = 1
   CFLAGS ?= -O2 -fomit-frame-pointer -falign-loops=2 -falign-jumps=2 -falign-functions=2
   CFLAGS += -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE
 endif
@@ -31,6 +28,8 @@ ifeq ($(USE_CSS), 1)
   CFLAGS += -DHAVE_CSS
 endif
 
+i686-USE_MMX = 1
+USE_MMX := ${${ARCH}-USE_MMX}
 ifeq ($(USE_MMX), 1)
   CFLAGS += -DHAVE_MMX
   ASMOBJS = $(OBJDIR)/video/mmxidct.o
