@@ -1,7 +1,6 @@
 #include "libmpeg3.h"
 #include "mpeg3io.h"
 #include "mpeg3protos.h"
-#include "workarounds.h"
 
 #include <errno.h>
 #include <math.h>
