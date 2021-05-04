@@ -1,7 +1,6 @@
 CC = gcc
 NASM = nasm
 USE_CSS = 1
-A52DIR := $(shell expr a52dec* )
 
 DST=/usr/bin
 
@@ -36,28 +35,8 @@ ifeq ($(USE_MMX), 1)
   NASMOBJS = $(OBJDIR)/video/reconmmx.o
 endif
 
-
-
-
-
-
-CFLAGS += \
-	-I. \
-	-I$(A52DIR)/include \
-	-I$(A52DIR)/liba52
-
-
-
+CFLAGS += -I.
 CFLAGS += -g
-
-
-
-
-
-
-
-
-
 
 OBJS = \
 	$(OBJDIR)/audio/ac3.o \
@@ -115,25 +94,20 @@ DIRS := \
 	$(OBJDIR)/audio \
 	$(OBJDIR)/video
 
-include Makefile.a52
-
-DIRS += $(A52DIRS)
-
-
 OUTPUT = $(OBJDIR)/libmpeg3.a
 UTILS = $(OBJDIR)/mpeg3dump $(OBJDIR)/mpeg3peek $(OBJDIR)/mpeg3toc  $(OBJDIR)/mpeg3cat
 
 #$(OBJDIR)/mpeg3split
 
 
-LIBS = -lm -lpthread
+LIBS = -lm -lpthread -la52
 
 $(shell mkdir -p $(OBJDIR) $(DIRS))
 
 all: $(OUTPUT) $(UTILS)
 
-$(OUTPUT): $(OBJS) $(ASMOBJS) $(NASMOBJS) $(A52OBJS)
-	ar rcs $(OUTPUT) $(OBJS) $(ASMOBJS) $(A52OBJS) $(NASMOBJS)
+$(OUTPUT): $(OBJS) $(ASMOBJS) $(NASMOBJS)
+	ar rcs $(OUTPUT) $(OBJS) $(ASMOBJS) $(NASMOBJS)
 
 progs += ${OBJDIR}/mpeg3dump
 progs += ${OBJDIR}/mpeg3peek
@@ -178,10 +152,5 @@ ${ASMOBJS}: ${OBJDIR}/%.o: %.S
 ${NASMOBJS}: ${OBJDIR}/%.o: %.s
 	${NASM} -f elf -o $@ $<
 
-${A52OBJS}: ${OBJDIR}/%.o: %.c
-	${CC} ${A52CFLAGS} -c -o $@ $<
-
 ${OBJDIR}/%.o: %.c
 	${CC} ${CFLAGS} -c -o $@ $<
-
-include depend.a52
