@@ -6,23 +6,21 @@ A52DIR := $(shell expr a52dec* )
 
 DST=/usr/bin
 
-OBJDIR := $(shell uname --machine)
+ARCH = $(shell uname -m)
+OBJDIR := ${ARCH}
 
-
-
-
-ifeq ($(OBJDIR), alpha)
+ifeq (${ARCH}, alpha)
   USE_MMX = 0
   CFLAGS ?= -O4 -arch ev67 -ieee -accept c99_keywords -gcc_messages
 endif
 
-ifeq ($(OBJDIR), i686)
+ifeq (${ARCH}, i686)
   USE_MMX = 1
   CFLAGS ?= -O2 -fomit-frame-pointer -falign-loops=2 -falign-jumps=2 -falign-functions=2
   CFLAGS += -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE
 endif
 
-ifeq ($(OBJDIR), x86_64)
+ifeq (${ARCH}, x86_64)
   CFLAGS ?= -O2 -fomit-frame-pointer
   CFLAGS += -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE
 endif
