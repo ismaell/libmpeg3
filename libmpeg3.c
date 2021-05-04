@@ -178,7 +178,7 @@ static int is_ac3(uint32_t bits)
 int mpeg3_check_sig(char *path)
 {
 	mpeg3_fs_t *fs;
-	u_int32_t bits, bits2;
+	uint32_t bits, bits2;
 	char *ext;
 	int result = 0;
 

@@ -60,7 +60,7 @@ typedef struct {
 
 static u_int get4bytes(u_char *buf)
 {
-	return bswap_32 (*((u_int32_t *)buf));
+	return bswap_32 (*((uint32_t *)buf));
 }
 
 static u_int get2bytes(u_char *buf)
@@ -115,7 +115,7 @@ static int ifo_table(ifo_t *ifo, int64_t offset, unsigned long tbl_id)
 	unsigned char *data;
 	int64_t len = 0;
 	int i;
-	u_int32_t *ptr;
+	uint32_t *ptr;
 
 	if(!offset) return -1;
 
@@ -149,7 +149,7 @@ static int ifo_table(ifo_t *ifo, int64_t offset, unsigned long tbl_id)
 	}
 
 	ifo->data[tbl_id] = data;
-	ptr = (u_int32_t*)data;
+	ptr = (uint32_t*)data;
 	len /= 4;
 
 	if(tbl_id == ID_TMT) 
