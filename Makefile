@@ -5,6 +5,8 @@ USE_CSS = 1
 DEST =
 prefix = /usr
 bindir = ${prefix}/bin
+libdir = ${prefix}/lib
+includedir = ${prefix}/include
 
 ARCH = $(shell uname -m)
 OBJDIR := ${ARCH}
@@ -135,9 +137,16 @@ $(OBJDIR)/mpeg2qt: $(OUTPUT)
 		-lz \
 		-ldl
 
+HEADERS = \
+	libmpeg3.h \
+	mpeg3private.h \
+	mpeg3protos.h
+
 .PHONY: install
-install: ${UTILS}
-	install -d ${DEST}${bindir}
+install: ${OUTPUT} ${UTILS} ${HEADERS}
+	install -d ${DEST}${bindir} ${DEST}${libdir} ${DEST}${includedir}
+	install -m444 ${HEADERS} ${DEST}${includedir}
+	install -m444 ${OUTPUT} ${DEST}${libdir}
 	install -m555 ${UTILS} ${DEST}${bindir}
 
 clean:
