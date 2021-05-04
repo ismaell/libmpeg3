@@ -131,38 +131,29 @@ UTILS = $(OBJDIR)/mpeg3dump $(OBJDIR)/mpeg3peek $(OBJDIR)/mpeg3toc  $(OBJDIR)/mp
 
 LIBS = -lm -lpthread
 
-$(shell mkdir -p $(OBJDIR) )
-
-$(shell echo $(CFLAGS) > $(OBJDIR)/c_flags)
-$(shell echo $(A52CFLAGS) > $(OBJDIR)/a52_flags)
-$(shell echo $(OBJS) $(ASMOBJS) $(A52OBJS) $(NASMOBJS) > $(OBJDIR)/objs)
-$(shell mkdir -p $(DIRS) )
+$(shell mkdir -p $(OBJDIR) $(DIRS))
 
 all: $(OUTPUT) $(UTILS)
 
 
 $(OUTPUT): $(OBJS) $(ASMOBJS) $(NASMOBJS) $(A52OBJS)
-	ar rcs $(OUTPUT) `cat $(OBJDIR)/objs`
+	ar rcs $(OUTPUT) $(OBJS) $(ASMOBJS) $(A52OBJS) $(NASMOBJS)
 
-
-
-$(OBJDIR)/mpeg3dump: $(OUTPUT) mpeg3dump.c
-	$(CC) `cat $(OBJDIR)/c_flags` -o $(OBJDIR)/mpeg3dump mpeg3dump.c $(OUTPUT) $(LIBS)
-
-$(OBJDIR)/mpeg3peek: $(OUTPUT) mpeg3peek.c
-	$(CC) `cat $(OBJDIR)/c_flags` -o $(OBJDIR)/mpeg3peek mpeg3peek.c $(OUTPUT) $(LIBS)
-
-$(OBJDIR)/mpeg3toc: $(OUTPUT) mpeg3toc.c
-	$(CC) `cat $(OBJDIR)/c_flags` -o $(OBJDIR)/mpeg3toc mpeg3toc.c $(OUTPUT) $(LIBS)
-
-$(OBJDIR)/mpeg3cat: $(OUTPUT) mpeg3cat.c
-	$(CC) `cat $(OBJDIR)/c_flags` -o $(OBJDIR)/mpeg3cat mpeg3cat.c $(OUTPUT) $(LIBS)
-
-#$(OBJDIR)/mpeg3split: $(OUTPUT)
-#	$(CC) `cat $(OBJDIR)/c_flags` -o $(OBJDIR)/mpeg3split mpeg3split.c $(OUTPUT) $(LIBS)
+progs += ${OBJDIR}/mpeg3dump
+progs += ${OBJDIR}/mpeg3peek
+progs += ${OBJDIR}/mpeg3toc
+progs += ${OBJDIR}/mpeg3cat
+#progs += $(OBJDIR)/mpeg3split
+${OBJDIR}/mpeg3dump: mpeg3dump.c
+${OBJDIR}/mpeg3peek: mpeg3peek.c
+${OBJDIR}/mpeg3toc: mpeg3toc.c
+${OBJDIR}/mpeg3cat: mpeg3cat.c
+${OBJDIR}/mpeg3split: mpeg3split.c
+${progs}:
+	${CC} ${CFLAGS} -o $@ ${@F}.c ${OUTPUT} ${LIBS}
 
 $(OBJDIR)/mpeg2qt: $(OUTPUT)
-	$(CC) `cat $(OBJDIR)/c_flags` -o $(OBJDIR)/mpeg2qt mpeg2qt.c \
+	$(CC) ${CFLAGS} -o $(OBJDIR)/mpeg2qt mpeg2qt.c \
 		$(OUTPUT) \
 		$(LIBS) \
 		-I. \
@@ -186,13 +177,16 @@ wc:
 	cat *.c *.h audio/*.c audio/*.h video/*.c video/*.h | wc
 
 $(OBJS): 
-	$(CC) -c `cat $(OBJDIR)/c_flags` $(subst $(OBJDIR)/,, $*.c) -o $*.o
+	${CC} -c ${CFLAGS} $(subst $(OBJDIR)/,, $*.c) -o $*.o
+
 $(ASMOBJS): 
-	$(CC) -c `cat $(OBJDIR)/c_flags` $(subst $(OBJDIR)/,, $*.S) -o $*.o
+	${CC} -c ${CFLAGS} $(subst $(OBJDIR)/,, $*.S) -o $*.o
+
 $(NASMOBJS): 
 	$(NASM) -f elf $(subst $(OBJDIR)/,, $*.s) -o $*.o
+
 $(A52OBJS):
-	$(CC) -c `cat $(OBJDIR)/a52_flags` $(subst $(OBJDIR)/,, $*.c) -o $*.o
+	${CC} -c ${A52CFLAGS} $(subst $(OBJDIR)/,, $*.c) -o $*.o
 
 $(OBJDIR)/libmpeg3.o: 				    libmpeg3.c
 $(OBJDIR)/mpeg3atrack.o: 			    mpeg3atrack.c
